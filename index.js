@@ -1,3 +1,10 @@
+import "./src/constants";
+import {
+  _BufferAllocUnsafe,
+  _BufferAlloc,
+  _BufferFrom,
+  _NewUint8Array
+} from "./src/utils";
 /**
  * Copyright 2015 Huan Du. All rights reserved.
  * Licensed under the MIT license that can be found in the LICENSE file.
@@ -9,84 +16,6 @@
 //
 // it's not a completed polyfill implementation. i just do necessary shims for this
 // package only.
-var _BufferFrom = Buffer.from || function() {
-  switch (arguments.length) {
-    case 1: return new Buffer(arguments[0]);
-    case 2: return new Buffer(arguments[0], arguments[1]);
-    case 3: return new Buffer(arguments[0], arguments[1], arguments[2]);
-    default: throw new Exception('unexpected call.');
-  }
-};
-var _BufferAlloc = Buffer.alloc || function(size, fill, encoding) {
-  var buf = new Buffer(size);
-
-  if (fill !== undefined) {
-    if (typeof encoding === "string") {
-      buf.fill(fill, encoding);
-    } else {
-      buf.fill(fill);
-    }
-  }
-
-  return buf;
-};
-var _BufferAllocUnsafe = Buffer.allocUnsafe || function(size) {
-  return new Buffer(size);
-};
-var _NewUint8Array = (function() {
-  if (typeof Uint8Array === 'undefined') {
-    return function(size) {
-      return new Array(size);
-    };
-  } else {
-    return function(size) {
-      return new Uint8Array(size);
-    }
-  }
-})();
-
-var ASCII85_BASE = 85;
-var ASCII85_CODE_START = 33;
-var ASCII85_CODE_END = ASCII85_CODE_START + ASCII85_BASE;
-var ASCII85_NULL = String.fromCharCode(0);
-var ASCII85_NULL_STRING = ASCII85_NULL + ASCII85_NULL + ASCII85_NULL + ASCII85_NULL;
-var ASCII85_ZERO = 'z';
-var ASCII85_ZERO_VALUE = ASCII85_ZERO.charCodeAt(0);
-var ASCII85_PADDING_VALUE = 'u'.charCodeAt(0);
-var ASCII85_ENCODING_GROUP_LENGTH = 4;
-var ASCII85_DECODING_GROUP_LENGTH = 5;
-var ASCII85_BLOCK_START = '<~';
-var ASCII85_BLOCK_START_LENGTH = ASCII85_BLOCK_START.length;
-var ASCII85_BLOCK_START_VALUE = _BufferFrom(ASCII85_BLOCK_START).readUInt16BE(0);
-var ASCII85_BLOCK_END = '~>';
-var ASCII85_BLOCK_END_LENGTH = ASCII85_BLOCK_END.length;
-var ASCII85_BLOCK_END_VALUE = _BufferFrom(ASCII85_BLOCK_END).readUInt16BE(0);
-var ASCII85_GROUP_SPACE = 'y';
-var ASCII85_GROUP_SPACE_VALUE = ASCII85_GROUP_SPACE.charCodeAt(0);
-var ASCII85_GROUP_SPACE_CODE = 0x20202020;
-var ASCII85_GROUP_SPACE_STRING = '    ';
-
-var ASCII85_DEFAULT_ENCODING_TABLE = (function() {
-  var arr = new Array(ASCII85_BASE);
-  var i;
-
-  for (i = 0; i < ASCII85_BASE; i++) {
-    arr[i] = String.fromCharCode(ASCII85_CODE_START + i);
-  }
-
-  return arr;
-})();
-
-var ASCII85_DEFAULT_DECODING_TABLE = (function() {
-  var arr = new Array(1 << 8);
-  var i;
-
-  for (i = 0; i < ASCII85_BASE; i++) {
-    arr[ASCII85_CODE_START + i] = i;
-  }
-
-  return arr;
-})();
 
 /**
  * Create a new Ascii85 codec.
