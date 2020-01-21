@@ -301,3 +301,5 @@ defaultCodec.PostScript = new Ascii85({
  * Ascii85 codec constructor.
  */
 defaultCodec.Ascii85 = Ascii85;
+
+export const Ascii85;
